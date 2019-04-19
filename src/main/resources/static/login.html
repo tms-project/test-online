@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="application/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script>
+
+        function LoginFun(user, id, password){  //user:"学生"、"教师"、"管理员"
+            var loginType;
+            if(user === "管理员")
+                loginType = "AdminLogin";
+            else if (user === "学生")
+                loginType = "StudentLogin";
+            else if (user === "教师")
+                loginType = "TeacherLogin";
+            else
+                alert("ddd");
+            $.ajax({
+                type: "POST",   //我都设为POST
+                url: "/templates/login/" + loginType,
+                data: JSON.stringify({"id":id, "password":password}),  //请使用JSON.stringify序列化
+                contentType : "application/json",
+                async:false,
+                dataType: "json",
+                success: function (data) {
+                    // alert(data);
+                    alert(JSON.stringify(data));  //请使用JSON.stringify()解析
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<h2>静态页面</h2>
+<a href="/templates/Test">跳转测试</a>
+<button onclick="LoginFun('学生','123','123')">学生登陆测试</button>
+<button onclick="LoginFun('管理员','123','12')">管理员登陆测试</button>
+
+</body>
+</html>
