@@ -7,11 +7,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ShiroUtil {
 
-    public static boolean hasRole(String ... strings){
+    public static boolean hasRole(String ... roles){
         Subject subject = SecurityUtils.getSubject();
         AtomicInteger count = new AtomicInteger();
         for (String role :
-                strings) {
+                roles) {
             if(subject.hasRole(role))
                 count.getAndIncrement();
         }
