@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import java.util.Map;
 
+import static com.example.testonline.shiro.ShiroUtil.hasRole;
+
 @Controller
 @RequestMapping(value = "/templates")
 public class AdminController {
@@ -47,12 +49,14 @@ public class AdminController {
                 throw new TosException(CodeEnum.AuthenticationException);
             }
         }
+        System.out.println("Student:Roles:student:admin:teacher:"+subject.hasRole("student")+subject.hasRole("admin")+subject.hasRole("teacher"));
         return ResultUtil.sussess();
     }
 
     @RequestMapping(value = "/selectAdmin",method = RequestMethod.POST)
     @ResponseBody
     public Result<Administrator> selectAdmin(@RequestBody Map<String, String> person) {
+        if (!hasRole("admim")) throw new TosException(CodeEnum.JurisdictionException);
         String id = person.get("id");
         Administrator administrator = adminService.select(id);
         if (administrator == null) throw new TosException(CodeEnum.NoUserException);
@@ -63,7 +67,9 @@ public class AdminController {
     @RequestMapping(value = "/adminUpdate",method = RequestMethod.POST)
     @ResponseBody
     public Result updateAdmin(@RequestBody Administrator administrator) {
+        if (!hasRole("admim")) throw new TosException(CodeEnum.JurisdictionException);
         adminService.update(administrator);
         return ResultUtil.sussess();
     }
+
 }

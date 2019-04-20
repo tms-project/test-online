@@ -75,7 +75,7 @@
         function iStu() {
             $.ajax({
                 type: "POST",
-                url: "/templates/insertStudent", //请把html放置在templates
+                url: "/templates/insertStudent",
                 data: JSON.stringify({"sid":"1234","sname":"chen","password":"123" }),  //对应字段名，请使用JSON.stringify序列化
                 contentType : "application/json",
                 async:false,
@@ -89,7 +89,7 @@
         function uStu() {
             $.ajax({
                 type: "POST",
-                url: "/templates/updateStudent", 
+                url: "/templates/updateStudent",
                 data: JSON.stringify({"sid":"1234","sname":"chen","password":"1234","phone":"123456789" }),  //id唯一不能修改。对应字段名，请使用JSON.stringify序列化
                 contentType : "application/json",
                 async:false,
@@ -117,7 +117,7 @@
         function saNChoi(num) {;
             $.ajax({
                 type: "POST",
-                url: "/templates/selectChoiceQuestionAt", 
+                url: "/templates/selectChoiceQuestionAt",
                 data: JSON.stringify({"number":num}),  //一定要number,请使用JSON.stringify序列化
                 contentType : "application/json",
                 async:false,
@@ -131,7 +131,7 @@
         function upload() {
             var fileId = event.target.id;
             $.ajaxFileUpload({
-                url: "/templates/insertChoiceByExcel",
+                url: "/templates/insertFillByExcel",
                 type: "post",
                 secureuri: false,
                 fileElementId: fileId,
@@ -150,7 +150,7 @@
     <button onclick="selectStu('123')">学生单条查询测试</button>
     <button onclick="dStu('12')">学生单条删除测试</button>
     <button onclick="iStu()">学生单条插入测试</button>
-    <input type="file" id="file" name="file" multiple="multiple" value="上传excel文件" onchange="upload()"/>
+    <input type="file" id="file" name="file" multiple="multiple" value="上传选择题excel文件，如果测试上传填空题要改url" onchange="upload()"/>
     <button onclick="uStu()">学生单条更新测试</button>
     <button onclick="saChoi()">选择题查询所有测试</button>
     <button onclick="saNChoi('2000')">选择题随机n条查询测试(数据库题数不够)</button>

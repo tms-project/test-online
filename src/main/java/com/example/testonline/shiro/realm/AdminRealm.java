@@ -22,10 +22,10 @@ public class AdminRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
 
-        Set<String> roles = new HashSet<>(2);
-        roles.add(LoginType.ADMIN.getType());
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        info.setRoles(roles);
+        if (principalCollection.getRealmNames().contains("admin")){
+            info.addRole("admin");
+        }
         return info;
     }
 

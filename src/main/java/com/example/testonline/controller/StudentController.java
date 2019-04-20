@@ -12,7 +12,9 @@ import com.example.testonline.shiro.LoginType;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
+import org.springframework.context.annotation.Role;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.util.Map;
+import java.util.*;
+
+import static com.example.testonline.shiro.ShiroUtil.hasRole;
 
 @Controller
 @RequestMapping(value = "/templates")
@@ -49,12 +53,14 @@ public class StudentController {
             }
         }
         System.out.println("登陆成功");
+        System.out.println("Student:Roles:student:admin:teacher:"+subject.hasRole("student")+subject.hasRole("admin")+subject.hasRole("teacher"));
         return ResultUtil.sussess();
     }
 
     @RequestMapping(value = "/insertStudent",method = RequestMethod.POST)
     @ResponseBody
     public Result insertStu(@RequestBody Student student) {
+        if (!hasRole("admin","student")) throw new TosException(CodeEnum.JurisdictionException);
         studentService.insert(student);
         return ResultUtil.sussess();
     }
@@ -70,6 +76,7 @@ public class StudentController {
     @RequestMapping(value = "/deleteStudent",method = RequestMethod.POST)
     @ResponseBody
     public Result deleteStu(@RequestBody Map<String, String> person) {
+        if (!hasRole("admin")) throw new TosException(CodeEnum.JurisdictionException);
         String id = person.get("id");
         studentService.delete(id);
         return ResultUtil.sussess();
@@ -78,6 +85,7 @@ public class StudentController {
     @RequestMapping(value = "/updateStudent",method = RequestMethod.POST)
     @ResponseBody
     public Result updateStu(@RequestBody Student student) {
+        if (!hasRole("admin","student")) throw new TosException(CodeEnum.JurisdictionException);
         studentService.update(student);
         return ResultUtil.sussess();
     }

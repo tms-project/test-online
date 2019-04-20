@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import java.util.Map;
 
+import static com.example.testonline.shiro.ShiroUtil.hasRole;
+
 @Controller
 @RequestMapping(value = "/templates")
 public class TeacherController  {
@@ -47,12 +49,14 @@ public class TeacherController  {
                 throw new TosException(CodeEnum.AuthenticationException);
             }
         }
+        System.out.println("Student:Roles:student:admin:teacher:"+subject.hasRole("student")+subject.hasRole("admin")+subject.hasRole("teacher"));
         return ResultUtil.sussess();
     }
 
     @RequestMapping(value = "/insertTeacher",method = RequestMethod.POST)
     @ResponseBody
     public Result insertTea(@RequestBody Teacher teacher) {
+        if (!hasRole("admin")) throw new TosException(CodeEnum.JurisdictionException);
         teacherService.insert(teacher);
         return ResultUtil.sussess();
     }
@@ -60,6 +64,7 @@ public class TeacherController  {
     @RequestMapping(value = "/selectTeacher",method = RequestMethod.POST)
     @ResponseBody
     public Result<Teacher> selectTea(@RequestBody Map<String, String> person) {
+        if (!hasRole("admin","teacher")) throw new TosException(CodeEnum.JurisdictionException);
         String id = person.get("id");
         Teacher teacher = teacherService.select(id);
         return  ResultUtil.sussess(teacher);
@@ -68,6 +73,7 @@ public class TeacherController  {
     @RequestMapping(value = "/updateTeacher",method = RequestMethod.POST)
     @ResponseBody
     public Result updateTea(@RequestBody Teacher teacher) {
+        if (!hasRole("admin","teacher")) throw new TosException(CodeEnum.JurisdictionException);
         teacherService.update(teacher);
         return ResultUtil.sussess();
     }
@@ -75,6 +81,7 @@ public class TeacherController  {
     @RequestMapping(value = "/deleteTeacher",method = RequestMethod.POST)
     @ResponseBody
     public Result deleteTea(@RequestBody Map<String, String> person) {
+        if (!hasRole("admin")) throw new TosException(CodeEnum.JurisdictionException);
         String id = person.get("id");
         teacherService.delete(id);
         return ResultUtil.sussess();

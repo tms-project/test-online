@@ -1,8 +1,10 @@
 package com.example.testonline.controller;
 
 import com.example.testonline.pojo.Fillquestion;
+import com.example.testonline.result.CodeEnum;
 import com.example.testonline.result.Result;
 import com.example.testonline.result.ResultUtil;
+import com.example.testonline.result.TosException;
 import com.example.testonline.service.FillQuestionService;
 import com.example.testonline.service.ReadService;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.*;
+
+import static com.example.testonline.shiro.ShiroUtil.hasRole;
 
 @Controller
 @RequestMapping(value = "/templates")
@@ -25,6 +29,7 @@ public class FillController {
     @RequestMapping(value = "/insertFillquestion",method = RequestMethod.POST)
     @ResponseBody
     public Result insertFillq(@RequestBody Fillquestion fillquestion) {
+        if (!hasRole("admin","teacher")) throw new TosException(CodeEnum.JurisdictionException);
         fillQuestionService.insert(fillquestion);
         return ResultUtil.sussess();
     }
@@ -32,6 +37,7 @@ public class FillController {
     @RequestMapping(value = "/insertFillByExcel", method = RequestMethod.POST)
     @ResponseBody
     public Result insertFillByExcel(@RequestParam("file") MultipartFile file) {
+        if (!hasRole("admin","teacher")) throw new TosException(CodeEnum.JurisdictionException);
         List<Object> datas = readService.excelReadService(file, Fillquestion.class);
         Fillquestion fillquestion;
         for (Object data:
@@ -61,6 +67,7 @@ public class FillController {
     @RequestMapping(value = "/updateFillquestion",method = RequestMethod.POST)
     @ResponseBody
     public Result updateFillq(@RequestBody Fillquestion fillquestion) {
+        if (!hasRole("admin","teacher")) throw new TosException(CodeEnum.JurisdictionException);
         fillQuestionService.update(fillquestion);
         return ResultUtil.sussess();
     }
@@ -68,6 +75,7 @@ public class FillController {
     @RequestMapping(value = "/deleteFillQuestion",method = RequestMethod.POST)
     @ResponseBody
     public Result deleteFill(@RequestBody Map<String, String> person) {
+        if (!hasRole("admin","teacher")) throw new TosException(CodeEnum.JurisdictionException);
         String id = person.get("id");
         fillQuestionService.delete(Integer.valueOf(id));
         return ResultUtil.sussess();
