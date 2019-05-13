@@ -34,7 +34,7 @@ public class AdminController {
     @ResponseBody
     public Result login(@RequestBody Map<String,String> person) {
         Subject subject = SecurityUtils.getSubject();
-       // subject.getSession().setTimeout(-1001L); //当timeout设置为负数时 表示永不过期
+        subject.getSession().setTimeout(-1001L); //当timeout设置为负数时 表示永不过期
                                                 // timeout中的时间单位为ms，但是Shiro会把这个时间转成:s，
                                                 // 而且是会舍掉小数部分，这样我设置的是-1ms，转成s后就是0s，马上就过期了。
         if (!subject.isAuthenticated()){
